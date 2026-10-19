@@ -1,0 +1,52 @@
+# Windows packaging for the Vault desktop app. Read together with build/installer.nsh,
+# which owns the uninstall behaviour for the application data directory.
+#
+# Identity is pinned in three places that must stay in agreement:
+#   appId / productName here and in package.json, and app.setName('Vault') in
+#   src/main/index.ts. That setName call is what makes the Electron user-data
+#   directory %APPDATA%\Vault for both the dev and the packaged app, so
+#   upgrading never moves or copies the vault.
+
+appId: local.vault.desktop
+productName: Vault
+
+directories:
+  # `release/` is already git-ignored, so installer output never enters the repo.
+  output: release
+  buildResources: build
+
+# The runtime payload is the electron-vite output plus package.json. Production
+# node_modules are collected by electron-builder separately from this list, so
+# keeping it positive means a new dependency can never be dropped by accident.
+files:
+  - out/**/*
+  - package.json
+
+asar: true
+# better-sqlite3 resolves prebuilds/<platform>-<arch>.node with a runtime
+# require of a filesystem path, and a .node file cannot be loaded from inside
+# an asar archive.
+asarUnpack:
+  - '**/node_modules/better-sqlite3/**'
+
+# better-sqlite3 13 is an N-API addon (gypfile: false, depends on
+# node-addon-api) and ships prebuilds/win32-x64.node, which loads in Electron
+# unchanged. Repacking the host build is what we want, not a rebuild.
+npmRebuild: false
+
+win:
+  target:
+    - nsis
+
+nsis:
+  # Assisted, per-user wizard: no admin rights, and the user sees what is
+  # happening instead of a silent install.
+  oneClick: false
+  perMachine: false
+  # Data deletion is decided by build/installer.nsh with an explicit yes, not
+  # by this flag.
+  deleteAppDataOnUninstall: false
+  # Hyphenated, architecture-explicit name: a GitHub asset URL of
+  # "Vault Setup 1.0.0.exe" encodes the spaces and stops matching the
+  # certutil command documented in README.md.
+  artifactName: Vault-Setup-${version}-win-x64.${ext}

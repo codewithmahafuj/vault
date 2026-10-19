@@ -1,0 +1,87 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Check tag matches package.json version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}".TrimStart("v")
+          $pkg = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          if ($tag -ne $pkg) {
+            Write-Error "Tag v$tag does not match package.json version $pkg"
+            exit 1
+          }
+
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build
+      # --publish never is required, not cosmetic: electron-builder infers
+      # publish=onTag from the CI git tag and, when GITHUB_TOKEN/GH_TOKEN is in
+      # the environment, auto-detects GitHub as the publisher and uploads the
+      # installer itself. The draft release below is the only publisher.
+      - run: npm run dist -- --publish never
+
+      - name: Compute SHA-256 and release notes
+        shell: pwsh
+        run: |
+          $candidates = @(Get-ChildItem release -Filter "Vault-Setup-*-win-x64.exe" | Sort-Object Name)
+          if ($candidates.Count -ne 1) {
+            Write-Error "Expected exactly one installer in release/, found $($candidates.Count)"
+            exit 1
+          }
+          $installer = $candidates[0]
+          $hash = (Get-FileHash $installer.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  $($installer.Name)" | Out-File -Encoding ascii release/sha256.txt
+          $notes = @"
+          ## Vault ${{ github.ref_name }}
+
+          Local, single-user credential manager for Windows x64. No server, no account, no telemetry.
+
+          ### Download
+          ``$($installer.Name)`` (per-user installer, no admin rights needed)
+
+          SHA-256: ``$hash``
+
+          ### Known limitations
+          - Windows x64 only.
+          - No backup, export, import, sync or auto-update. Your vault lives in ``%APPDATA%\Vault``.
+          - Not code-signed: Windows SmartScreen may warn on first launch (More info, then Run anyway). Verify the SHA-256 above first.
+
+          See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/CHANGELOG.md) for details.
+          "@
+          $notes | Out-File -Encoding utf8 release-notes.md
+
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: release/Vault-Setup-*-win-x64.exe
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          name: Vault ${{ github.ref_name }}
+          body_path: release-notes.md
+          files: |
+            release/Vault-Setup-*-win-x64.exe
+            release/sha256.txt

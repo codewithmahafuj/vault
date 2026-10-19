@@ -1,0 +1,1199 @@
+.app-shell {
+  display: grid;
+  grid-template-columns:
+    var(--panel-sidebar-width) minmax(var(--panel-list-min-width), var(--panel-list-width))
+    minmax(var(--panel-details-min-width), 1fr);
+  height: 100%;
+  background: var(--bg-base);
+}
+
+/* ---------- Sidebar ---------- */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  /* One 16px rhythm holds the wordmark, the search field and the nav together as
+     a single "find" group; the SERVICES section pulls away from it with its own
+     margin, so the section break stays twice the intra-group gap. */
+  gap: var(--space-4);
+  min-height: 0;
+  padding: var(--sidebar-padding-top) var(--sidebar-padding) var(--space-10);
+  background: var(--bg-sidebar);
+  border-right: var(--border-hairline) solid var(--border-default);
+}
+
+.brand {
+  flex: none;
+  color: var(--accent-primary);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  line-height: var(--leading-loose);
+  letter-spacing: -0.03em;
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: none;
+  height: var(--control-height);
+  padding: 0 var(--space-4);
+  border: var(--border-hairline) solid var(--border-input);
+  border-radius: var(--radius-full);
+  background: var(--bg-field);
+  color: var(--icon-muted);
+  transition:
+    border-color var(--motion-fast) var(--ease-standard),
+    box-shadow var(--motion-fast) var(--ease-standard),
+    color var(--motion-fast) var(--ease-standard);
+}
+
+/* The frame draws the magnifier gray while idle and blue only once the field
+   holds focus. */
+.search-field:focus-within {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+  color: var(--accent-primary);
+}
+
+.search-field > svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.search-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  line-height: var(--leading-tight);
+  -webkit-appearance: none;
+}
+
+/* The field ships its own clear button, so Chromium's is hidden. */
+.search-field input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.search-field input::placeholder {
+  color: var(--text-disabled);
+}
+
+.clear-button {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: var(--radius-full);
+  background: var(--bg-badge);
+  color: var(--text-muted);
+}
+
+.clear-button svg {
+  width: 12px;
+  height: 12px;
+}
+
+.clear-button:hover {
+  background: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.nav {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  flex: none;
+  height: var(--sidebar-item-height);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-xl);
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+  font-weight: 500;
+  text-align: left;
+  transition:
+    background-color var(--motion-fast) var(--ease-standard),
+    color var(--motion-fast) var(--ease-standard);
+}
+
+.nav-item svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+/* A narrow sidebar truncates its labels instead of wrapping them: a two-line
+   "All Passwords" would change the row height the tokens fix for every item. */
+.nav-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-item:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.nav-item--active {
+  background: var(--accent-subtle);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.nav-item--active:hover {
+  background: var(--accent-subtle);
+  color: var(--accent-text);
+}
+
+/* The Settings destination has no screen yet, so it keeps the frames' plain
+   look and only fades like every other action that is not wired up. */
+.nav-item--settings:disabled {
+  background: none;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.section-label {
+  flex: none;
+  margin-bottom: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: var(--leading-tight);
+  text-transform: uppercase;
+}
+
+/* The Services list is the one part of the sidebar that owns the leftover
+   height: everything else in the column is `flex: none`, so a long list scrolls
+   inside `.services` instead of squashing the search field and the rows above
+   it down to their text line-height. */
+.services-block {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: var(--space-4);
+}
+
+.services {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1px;
+  min-height: 0;
+  overflow-y: auto;
+  /* Reserve the scrollbar: the names and their counts keep the same width
+     whether or not this list happens to overflow. */
+  scrollbar-gutter: stable;
+}
+
+.service-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  flex: none;
+  height: var(--sidebar-item-height);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-xl);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  font-weight: 500;
+  text-align: left;
+  transition:
+    background-color var(--motion-fast) var(--ease-standard),
+    box-shadow var(--motion-fast) var(--ease-standard);
+}
+
+.service-item:hover {
+  background: var(--bg-hover);
+}
+
+.service-item--active {
+  background: var(--accent-subtle);
+  color: var(--accent-text);
+}
+
+.service-item--active:hover {
+  background: var(--accent-subtle);
+}
+
+.service-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.service-count {
+  flex: none;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.sidebar-footer {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-8);
+  border-top: var(--border-hairline) solid var(--border-default);
+}
+
+/* ---------- Shared marks ---------- */
+
+.tile {
+  display: grid;
+  place-items: center;
+  width: var(--tile-size);
+  height: var(--tile-size);
+  flex: none;
+  border-radius: var(--radius-md);
+  background: var(--accent-subtle);
+}
+
+.glyph {
+  display: block;
+  width: var(--tile-icon-size);
+  height: var(--tile-icon-size);
+}
+
+/* Brand marks arrive as a whole SVG document inside the glyph box, so the box
+   owns the size and the drawing scales to it. */
+.glyph > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Credential list column ---------- */
+
+.workspace-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  min-height: 0;
+  padding: var(--space-7) var(--panel-gutter) var(--space-6);
+  overflow-y: auto;
+  border-right: var(--border-hairline) solid var(--border-default);
+}
+
+.panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+/* The action keeps its own width and the heading takes what is left, so the two
+   compete by truncating the title rather than by overlapping the button. */
+.panel-head .button {
+  flex: none;
+}
+
+.panel-head-text {
+  min-width: 0;
+}
+
+.panel-eyebrow {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+}
+
+.panel-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-primary);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  line-height: var(--leading-loose);
+}
+
+.panel-subtitle {
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--control-height);
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-full);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background-color var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard),
+    color var(--motion-fast) var(--ease-standard);
+}
+
+.button svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.button--primary {
+  background: var(--accent-solid);
+  color: var(--text-on-accent);
+}
+
+.button--primary:hover:not(:disabled) {
+  background: var(--accent-solid-hover);
+}
+
+.button--primary:active:not(:disabled) {
+  background: var(--accent-pressed);
+}
+
+.button--secondary {
+  background: var(--bg-surface);
+  border: var(--border-hairline) solid var(--border-default);
+}
+
+.button--secondary:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+
+.button--danger {
+  background: none;
+  color: var(--state-error);
+}
+
+.button--danger:hover:not(:disabled) {
+  background: var(--state-error-bg);
+}
+
+/* Actions whose behaviour ships in a later unit keep the shape and colour the
+   frames specify, and fade the way the frames' own disabled pill does. They
+   stay real disabled buttons, so they never take keyboard focus and assistive
+   tech still announces them as unavailable. */
+.button:disabled,
+.field-action:disabled {
+  opacity: 0.55;
+}
+
+.card {
+  background: var(--bg-surface);
+  border: var(--border-hairline) solid var(--border-default);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-card);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.credential-list {
+  flex: none;
+}
+
+.credential-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  min-height: var(--credential-row-height);
+  padding: var(--space-3) var(--space-5);
+  background: transparent;
+  text-align: left;
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+
+.credential-row + .credential-row {
+  border-top: var(--border-hairline) solid var(--border-subtle);
+}
+
+.credential-row:hover {
+  background: var(--bg-hover);
+}
+
+/* The card clips its children, so a row's focus ring has to sit inside it. */
+.credential-row:focus-visible {
+  outline-offset: -3px;
+}
+
+.credential-row--selected,
+.credential-row--selected:hover {
+  background: var(--bg-selected);
+}
+
+.row-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.row-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-primary);
+  font-size: var(--text-row);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+}
+
+.row-title span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row-subtitle {
+  display: block;
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: var(--text-base);
+  line-height: var(--leading-tight);
+}
+
+.favorite-mark {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  color: var(--favorite-color);
+}
+
+.row-chevron {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  color: var(--icon-muted);
+}
+
+/* ---------- Details column ---------- */
+
+.workspace-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: var(--details-top) var(--space-6) var(--space-6) var(--panel-gutter);
+  overflow-y: auto;
+}
+
+.details {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--space-8);
+  /* The card belongs to its panel, not to the window: it fills the column it is
+     in and stops at the frames' measure instead of running edge to edge on a
+     maximised window. */
+  width: 100%;
+  max-width: var(--details-card-max-width);
+  margin-inline: auto;
+  padding: var(--space-8) var(--space-8) var(--space-6);
+}
+
+/* Master-detail travel. Below the compact breakpoint the list and the details
+   share one column, so the card needs a way back; above it both panes are on
+   screen at once and `display: none` keeps the button out of the tab order. */
+.pane-back {
+  display: none;
+  align-self: flex-start;
+  align-items: center;
+  gap: var(--space-1);
+  height: var(--control-height);
+  margin-bottom: var(--space-4);
+  padding: 0 var(--space-4) 0 var(--space-2);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+  font-weight: 600;
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+
+.pane-back svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.pane-back:hover {
+  background: var(--bg-hover);
+  color: var(--accent-text);
+}
+
+.details-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.details-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-primary);
+  font-size: var(--text-details);
+  font-weight: 600;
+  line-height: var(--leading-details);
+}
+
+.details-divider {
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: var(--border-hairline) solid var(--border-subtle);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.field-label {
+  color: var(--text-muted);
+  font-size: var(--text-base);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+}
+
+.field-value {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--field-height);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  line-height: var(--leading-tight);
+}
+
+.field-value code {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.field-value > span {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.field-plain {
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.value-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: none;
+}
+
+/* The frames label the copy affordance with the word "copy" next to the icon,
+   in the accent colour, rather than leaving it icon-only. */
+.field-action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: 28px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--accent-text);
+  font-size: var(--text-base);
+  font-weight: 500;
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+
+.field-action svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.field-action:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: var(--icon-button-size);
+  height: var(--icon-button-size);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  transition:
+    background-color var(--motion-fast) var(--ease-standard),
+    color var(--motion-fast) var(--ease-standard);
+}
+
+.icon-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.icon-button:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--accent-text);
+}
+
+.icon-button:disabled {
+  background: none;
+  color: var(--text-disabled);
+}
+
+.icon-button--danger:hover:not(:disabled) {
+  background: var(--state-error-bg);
+  color: var(--state-error);
+}
+
+/* No frame draws a favorited details card, so the lit star follows the row mark's
+   rule: the flag is carried by --favorite-color, not the accent. The hover keeps
+   the same color, so a lit star does not flash blue when it is about to go out. */
+.details-favorite[aria-pressed='true'],
+.details-favorite[aria-pressed='true']:hover:not(:disabled) {
+  color: var(--favorite-color);
+}
+
+.copied-feedback {
+  color: var(--state-success);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.details-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.details-meta {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+}
+
+.action-spacer {
+  flex: 1;
+}
+
+/* ---------- Modal card ---------- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--bg-overlay);
+}
+
+/* The one elevation in the app: the frames keep hairline borders everywhere else
+   and lift only this card. */
+.modal {
+  display: flex;
+  flex-direction: column;
+  width: var(--modal-width);
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--radius-xl);
+  background: var(--bg-modal);
+  box-shadow: var(--shadow-modal);
+  outline: none;
+}
+
+.modal-head {
+  padding: var(--space-7) var(--space-7) 0;
+}
+
+.modal-title {
+  color: var(--text-primary);
+  font-size: var(--text-modal);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+}
+
+.modal-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-height: 0;
+  padding: var(--space-5) var(--space-7) var(--space-6);
+  overflow-y: auto;
+}
+
+.modal-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding: 0 var(--space-7) var(--space-7);
+}
+
+.modal-text {
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  overflow-wrap: anywhere;
+}
+
+.modal-note {
+  color: var(--text-muted);
+}
+
+/* ---------- Credential form ---------- */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* The frames set the modal's field labels in the same uppercase, tracked step as
+   the sidebar's SERVICES label. */
+.form-label {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: var(--leading-tight);
+  text-transform: uppercase;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  min-width: 0;
+  border: var(--border-hairline) solid var(--border-input);
+  border-radius: var(--radius-md);
+  background: var(--bg-field);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  line-height: var(--leading-tight);
+  transition:
+    border-color var(--motion-fast) var(--ease-standard),
+    box-shadow var(--motion-fast) var(--ease-standard);
+}
+
+.form-input {
+  height: var(--input-height);
+  padding: 0 var(--space-4);
+}
+
+.form-textarea {
+  /* The notes box in UI04: two 22px lines with room to spare. */
+  min-height: 66px;
+  padding: var(--space-2) var(--space-4);
+  resize: vertical;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+  outline: none;
+}
+
+.form-input:disabled,
+.form-textarea:disabled {
+  background: var(--bg-input);
+  color: var(--text-disabled);
+}
+
+.form-input--invalid,
+.form-textarea--invalid {
+  border-color: var(--state-error-icon);
+}
+
+/* The reveal and copy affordances sit inside the field's own border, the way the
+   search field carries its magnifier. */
+.field-control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: var(--input-height);
+  padding: 0 var(--space-2) 0 var(--space-4);
+  border: var(--border-hairline) solid var(--border-input);
+  border-radius: var(--radius-md);
+  background: var(--bg-field);
+  transition:
+    border-color var(--motion-fast) var(--ease-standard),
+    box-shadow var(--motion-fast) var(--ease-standard);
+}
+
+.field-control:focus-within {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+.field-control--invalid {
+  border-color: var(--state-error-icon);
+}
+
+.field-control:has(.field-control-input:disabled) {
+  background: var(--bg-input);
+}
+
+.field-control-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  line-height: var(--leading-tight);
+  -webkit-appearance: none;
+}
+
+.field-control-input:disabled {
+  color: var(--text-disabled);
+}
+
+.field-problem {
+  color: var(--state-error);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+}
+
+.copy-problem {
+  color: var(--state-error);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.form-failure {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--state-error-bg);
+  color: var(--state-error);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: var(--chip-height);
+  padding: 0 var(--space-4);
+  border: var(--border-hairline) solid var(--border-default);
+  border-radius: var(--radius-xl);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition:
+    background-color var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard),
+    color var(--motion-fast) var(--ease-standard);
+}
+
+.chip:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+
+.chip--selected {
+  border-color: var(--accent-border);
+  background: var(--bg-selected);
+  color: var(--accent-text);
+}
+
+.chip:disabled {
+  opacity: 0.55;
+}
+
+.duplicate-warning {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: var(--border-hairline) solid var(--state-warning-border);
+  border-radius: var(--radius-md);
+  background: var(--state-warning-bg);
+}
+
+.duplicate-warning > svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  color: var(--state-warning-icon);
+}
+
+.duplicate-warning-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.duplicate-warning-text {
+  color: var(--state-warning);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: var(--leading-base);
+  overflow-wrap: anywhere;
+}
+
+.duplicate-warning-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Actions packed inside a card need a shorter step than the 40px header pills. */
+.button--compact {
+  height: 32px;
+  padding: 0 var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.button--quiet {
+  color: var(--text-secondary);
+}
+
+.button--quiet:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+/* ---------- Empty and status states ---------- */
+
+.empty-state {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  min-height: 0;
+  padding: var(--panel-gutter);
+  text-align: center;
+}
+
+.empty-badge {
+  display: grid;
+  place-items: center;
+  width: var(--empty-badge-size);
+  height: var(--empty-badge-size);
+  flex: none;
+  border-radius: var(--radius-full);
+  background: var(--bg-badge);
+  color: var(--icon-muted);
+}
+
+.empty-badge svg {
+  width: var(--empty-icon-size);
+  height: var(--empty-icon-size);
+}
+
+/* The error boundary replaces the whole three-panel window, so it centers in the
+   frame itself rather than in a panel, and keeps the empty state's own type. */
+.boundary-state {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  height: 100%;
+  padding: var(--panel-gutter);
+  background: var(--bg-base);
+  text-align: center;
+}
+
+.empty-title {
+  color: var(--text-primary);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: var(--leading-base);
+}
+
+.empty-body {
+  max-width: 380px;
+  color: var(--text-muted);
+  font-size: var(--empty-body-size);
+  line-height: var(--leading-base);
+}
+
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--text-muted);
+  font-size: var(--text-base);
+}
+
+.status-line svg {
+  width: 18px;
+  height: 18px;
+}
+
+.data-source-note {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: var(--border-hairline) solid var(--state-warning-border);
+  border-radius: var(--radius-full);
+  background: var(--state-warning-bg);
+  color: var(--state-warning);
+  font-size: var(--text-xs);
+  line-height: 18px;
+}
+
+.data-source-note svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+/* ---------- Narrow windows ---------- */
+
+@media (max-width: 1280px) {
+  :root {
+    --panel-sidebar-width: 264px;
+    --panel-list-width: 448px;
+    --panel-gutter: 28px;
+    --sidebar-padding: 24px;
+    --sidebar-padding-top: 24px;
+    --details-top: 130px;
+    --text-details: 21px;
+    --text-xl: 28px;
+    --leading-loose: 36px;
+    --empty-badge-size: 80px;
+    --empty-icon-size: 42px;
+  }
+
+  /* The heading keeps its full title: at this measure a labelled pill and a long
+     service name no longer share the list column, so the action becomes an icon
+     button and takes its accessible name and tooltip from the markup. */
+  .panel-head .button-label {
+    display: none;
+  }
+
+  .panel-head .button {
+    width: var(--control-height);
+    padding: 0;
+  }
+}
+
+@media (max-width: 1040px) {
+  :root {
+    --panel-sidebar-width: 228px;
+    --panel-list-width: 360px;
+    --panel-gutter: 20px;
+    --sidebar-padding: 16px;
+    --sidebar-padding-top: 20px;
+    --details-top: 126px;
+    --control-height: 36px;
+    --field-height: 42px;
+    --credential-row-height: 64px;
+    --sidebar-item-height: 36px;
+    --text-details: 19px;
+    --text-xl: 24px;
+    --leading-loose: 32px;
+    --empty-badge-size: 64px;
+    --empty-icon-size: 32px;
+    --empty-body-size: 16px;
+  }
+
+  .details {
+    padding: var(--space-5);
+  }
+
+  .search-field {
+    gap: var(--space-2);
+    padding: 0 var(--space-3);
+  }
+}
+
+/* ---------- Compact windows: one working column ---------- */
+
+/* Below this measure the three columns cannot each hold their own content: the
+   details card was measured at 158px wide at 800px and 58px at 700px, which is
+   narrower than one word. The list and the details therefore take turns in a
+   single column while the sidebar stays visible, labelled and filterable. */
+@media (max-width: 899px) {
+  :root {
+    /* 208px is the narrowest sidebar that still shows "All Passwords" on one
+       line at the compact text scale; the labels ellipsize below that. */
+    --panel-sidebar-width: 208px;
+    --panel-gutter: 16px;
+    --sidebar-padding: 14px;
+    --sidebar-padding-top: 16px;
+    /* The pane owns the whole column here, so the details column no longer needs
+       the list head height above it. */
+    --details-top: 16px;
+  }
+
+  .app-shell {
+    grid-template-columns: var(--panel-sidebar-width) minmax(0, 1fr);
+  }
+
+  /* Only one pane is drawn at a time; both stay mounted, so the selection, the
+     search query and the service filter all survive the trip between them. */
+  .app-shell[data-pane='list'] .workspace-details,
+  .app-shell[data-pane='details'] .workspace-list {
+    display: none;
+  }
+
+  .pane-back {
+    display: inline-flex;
+  }
+
+  .workspace-list {
+    border-right: 0;
+  }
+}

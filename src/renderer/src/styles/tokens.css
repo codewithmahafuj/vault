@@ -1,0 +1,156 @@
+:root {
+  color-scheme: light;
+
+  --bg-base: #f7f7f8;
+  --bg-sidebar: #f7f7f8;
+  --bg-surface: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-hover: #f1f6fc;
+  --bg-selected: #f5faff;
+  --bg-input: #f7f7f8;
+  --bg-field: #ffffff;
+  --bg-modal: #ffffff;
+  --bg-overlay: rgba(0, 0, 0, 0.62);
+  --bg-badge: #e6e6e8;
+  --bg-text-selection: #cce4ff;
+
+  --text-primary: #3a3a3e;
+  --text-secondary: #686868;
+  --text-muted: #71717a;
+  --text-disabled: #afafb4;
+  --text-on-accent: #ffffff;
+
+  --border-default: #e6e6e8;
+  --border-subtle: #efeff0;
+  --border-strong: #d4d4d8;
+  --border-input: #e9e9eb;
+  --border-focus: #0a84ff;
+
+  --accent-primary: #0a84ff;
+  --accent-hover: #3d9bff;
+  --accent-pressed: #0868d1;
+  --accent-solid: #0a84ff;
+  --accent-solid-hover: #0875e0;
+  --accent-subtle: #deeaf8;
+  --accent-border: #0a84ff;
+  --accent-text: #0a84ff;
+  --accent-ring: rgba(10, 132, 255, 0.18);
+
+  --state-success: #1a7f37;
+  --state-success-bg: #dafbe1;
+  --state-success-border: #a6e7b0;
+
+  --state-warning: #8b6914;
+  --state-warning-icon: #cc8f16;
+  --state-warning-bg: #fdf6e3;
+  --state-warning-border: #f3da8e;
+
+  --state-error: #d92d20;
+  --state-error-icon: #f04438;
+  --state-error-bg: #fef0ef;
+
+  --state-info: #0a84ff;
+  --icon-muted: #b1b1b8;
+  --favorite-color: #e9b95e;
+
+  --service-google: #0a84ff;
+  --service-microsoft: #0078d4;
+  --service-facebook: #1877f2;
+  --service-instagram: #9832c3;
+  --service-linkedin: #0a66c2;
+  --service-github: #1f1f1f;
+  --service-youtube: #ff0000;
+  --service-amazon: #f24e1e;
+  --service-x: #1f1f1f;
+  --service-generic: #686868;
+
+  --font-sans: 'Geist', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-11: 44px;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+  /* Type sizes measured from the 2880x2048 frames, which are 2x exports of the
+     1440x1024 window (source pixels halved). Each value was cross-checked by
+     measuring the same string in the app at 1x: the brand and the panel
+     heading have a 23px cap height (~32px font), the details heading and a
+     17px row title share the string "Google" at a 4:3 width ratio, the
+     empty-state title measures 18px, and row titles measure 17px.
+     --text-modal is the one exception: UI04 is a 1x export, so its ~15px cap
+     reads as 20px directly. */
+  --text-xs: 13px;
+  --text-sm: 14px;
+  --text-base: 15px;
+  --text-row: 17px;
+  --text-lg: 18px;
+  --text-modal: 20px;
+  --text-details: 23px;
+  --text-xl: 32px;
+
+  --leading-tight: 22px;
+  --leading-base: 26px;
+  --leading-loose: 40px;
+  --leading-details: 32px;
+
+  /* The frames measure a 310px sidebar, a 565px list column and a 565px details
+     column at 1440px, with 44px gutters around a 478px card. The list column is
+     a range, not a fixed width: it gives the details column its own floor, so a
+     narrow window shrinks the list instead of crushing the card to nothing. */
+  --panel-sidebar-width: 310px;
+  --panel-list-width: 565px;
+  --panel-list-min-width: 320px;
+  --panel-details-min-width: 340px;
+  --panel-gutter: 44px;
+  --sidebar-padding: 32px;
+  /* The wordmark, the search field and the nav share one 16px rhythm, and this
+     inset is the top of that group rather than a section of its own. */
+  --sidebar-padding-top: 28px;
+  /* The frames start the details card level with the credential list
+     card, so the details column carries the list head height as padding. */
+  --details-top: 134px;
+  /* A details card reads best at roughly the measure the frames specify, so it
+     stops growing with a maximised window instead of stretching edge to edge. */
+  --details-card-max-width: 560px;
+  --credential-row-height: 70px;
+  --tile-size: 40px;
+  --tile-icon-size: 22px;
+  --sidebar-item-height: 40px;
+  /* Buttons and the search field are 40px tall; the read-only value fields in
+     the details card are 48px. */
+  --control-height: 40px;
+  --field-height: 48px;
+  /* The Add/Edit card (UI04, exported at 1x) is a 500x670 card centered on the
+     window, padded 28px, with 44px text fields, 36px service chips and a 66px
+     notes box. Its heading shares the 20px --text-modal step. */
+  --modal-width: 500px;
+  --input-height: 44px;
+  --chip-height: 36px;
+  --icon-button-size: 34px;
+  --empty-badge-size: 96px;
+  --empty-icon-size: 50px;
+  --empty-body-size: 18px;
+  --border-hairline: 1px;
+
+  --shadow-modal: 0 24px 60px rgba(15, 23, 42, 0.28), 0 4px 14px rgba(15, 23, 42, 0.16);
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04);
+
+  --motion-fast: 120ms;
+  --motion-base: 160ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}

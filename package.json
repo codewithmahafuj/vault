@@ -1,0 +1,59 @@
+{
+  "name": "vault",
+  "productName": "Vault",
+  "version": "1.0.0",
+  "description": "Local, single-user Windows credential vault.",
+  "main": "out/main/index.js",
+  "author": "Mahafuj",
+  "license": "MIT",
+  "homepage": "https://github.com/codewithmahafuj/vault#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codewithmahafuj/vault.git"
+  },
+  "bugs": {
+    "url": "https://github.com/codewithmahafuj/vault/issues"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json",
+    "typecheck:web": "tsc --noEmit -p tsconfig.web.json",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "dist": "electron-builder --win nsis",
+    "dist:dir": "electron-builder --win --dir"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "lucide-react": "^0.469.0",
+    "prettier": "^3.9.9",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "thesvg": "^3.4.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.1",
+    "vite": "^7.3.7",
+    "vitest": "^5.0.3"
+  }
+}

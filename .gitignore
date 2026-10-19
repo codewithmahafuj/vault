@@ -1,0 +1,24 @@
+node_modules/
+out/
+dist/
+release/
+coverage/
+*.log
+.eslintcache
+
+Python/
+/crop
+scratch/
+context/
+final-audit-report.md
+
+# Local configuration and vault data
+.env
+.env.*
+!.env.example
+*.db
+*.sqlite
+*.sqlite3
+*.key
+*.pem
+*.p12
